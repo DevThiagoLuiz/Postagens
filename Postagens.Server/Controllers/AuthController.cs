@@ -7,55 +7,52 @@ using Postagens.Services;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Postagens.Controllers
+public class AuthController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    private readonly AppDbContext _context;
+    private readonly TokenService _tokenService;
+    private readonly byte[] _hmacKey;
+
+    public AuthController(AppDbContext context, TokenService tokenService, IConfiguration configuration)
     {
-        private readonly AppDbContext _context;
-        private readonly TokenService _tokenService;
+        _context = context;
+        _tokenService = tokenService;
+        _hmacKey = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]); // pega a chave do JWT
+    }
 
-        public AuthController(AppDbContext context, TokenService tokenService)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterDto dto)
+    {
+        if (await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email) != null)
+            return BadRequest("E-mail já cadastrado.");
+
+        using var hmac = new HMACSHA256(_hmacKey);
+        var user = new User
         {
-            _context = context;
-            _tokenService = tokenService;
-        }
+            Name = dto.Name,
+            Email = dto.Email,
+            PasswordHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)))
+        };
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto dto)
-        {
-            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-                return BadRequest("E-mail já cadastrado.");
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
 
-            using var hmac = new HMACSHA256();
-            var user = new User
-            {
-                Name = dto.Name,
-                Email = dto.Email,
-                PasswordHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)))
-            };
+        return Ok(new { message = "Usuário registrado com sucesso!" });
+    }
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto dto)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        if (user == null) return Unauthorized("Credenciais inválidas.");
 
-            return Ok(new { message = "Usuário registrado com sucesso!" });
-        }
+        using var hmac = new HMACSHA256(_hmacKey);
+        var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null) return Unauthorized("Credenciais inválidas.");
+        if (hash != user.PasswordHash) return Unauthorized("Credenciais inválidas.");
 
-            using var hmac = new HMACSHA256();
-            var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)));
+        var token = _tokenService.GenerateToken(user);
 
-            if (hash != user.PasswordHash) return Unauthorized("Credenciais inválidas.");
-
-            var token = _tokenService.GenerateToken(user);
-
-            return Ok(new { token });
-        }
+        return Ok(new { token });
     }
 }
