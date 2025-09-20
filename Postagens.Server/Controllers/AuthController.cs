@@ -7,6 +7,8 @@ using Postagens.Server.Services;
 using System.Security.Cryptography;
 using System.Text;
 
+[Route("api/[controller]")]
+[ApiController]
 public class AuthController : ControllerBase
 {
     private readonly AppDbContext _context;

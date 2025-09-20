@@ -9,3 +9,10 @@ th, td {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+.App {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    text-align: center;
+}
