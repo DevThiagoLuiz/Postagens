@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Postagens.Data;
-using Postagens.Services;
+using Postagens.Server.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

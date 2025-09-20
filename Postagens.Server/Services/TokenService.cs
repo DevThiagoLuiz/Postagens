@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Postagens.Models;
 
-namespace Postagens.Services
+namespace Postagens.Server.Services
 {
     public class TokenService
     {

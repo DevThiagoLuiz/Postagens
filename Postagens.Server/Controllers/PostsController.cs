@@ -22,7 +22,7 @@ namespace Postagens.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-          var posts = _context.Posts.ToListAsync();
+          var posts = await _context.Posts.ToListAsync();
             return Ok(posts);
         }
 

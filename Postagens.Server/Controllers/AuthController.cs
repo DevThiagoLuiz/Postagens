@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Postagens.Data;
 using Postagens.DTOs;
 using Postagens.Models;
-using Postagens.Services;
+using Postagens.Server.Services;
 using System.Security.Cryptography;
 using System.Text;
 
