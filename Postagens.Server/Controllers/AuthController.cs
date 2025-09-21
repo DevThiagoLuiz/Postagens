@@ -28,6 +28,9 @@ public class AuthController : ControllerBase
         if (await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email) != null)
             return BadRequest("E-mail já cadastrado.");
 
+        if(dto.Email.Length < 6)
+            return BadRequest("Digite um e-mail valido.");
+
         using var hmac = new HMACSHA256(_hmacKey);
         var user = new User
         {
