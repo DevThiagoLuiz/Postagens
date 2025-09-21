@@ -17,7 +17,7 @@ export const Login = () => {
         try {
             const data = await loginApi({ email, password });
             if (!data.token) throw new Error("Login falhou");
-            login(data.token);
+            login(data.token, data.user);
             navigate("/posts");
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {

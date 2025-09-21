@@ -44,7 +44,6 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Usuário registrado com sucesso!" });
     }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
@@ -58,6 +57,11 @@ public class AuthController : ControllerBase
 
         var token = _tokenService.GenerateToken(user);
 
-        return Ok(new { token });
+        return Ok(new
+        {
+            token,
+            user = new { user.Id, user.Name, user.Email, user.Bio }
+        });
     }
+
 }

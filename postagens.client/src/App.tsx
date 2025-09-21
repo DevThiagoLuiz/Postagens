@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./Components/Login";
 import { Register } from "./Components/Register";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./Context/AuthContext";
 import type { JSX } from "react";
+import { Feed } from "./Components/Feed";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     const { token } = useAuth();
@@ -20,7 +21,7 @@ function App() {
                         path="/posts"
                         element={
                             <PrivateRoute>
-                                <div>Posts Page (a implementar)</div>
+                                <Feed />
                             </PrivateRoute>
                         }
                     />

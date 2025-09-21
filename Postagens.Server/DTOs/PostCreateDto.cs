@@ -10,5 +10,8 @@ namespace Postagens.Dtos
 
         [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; }
+
+        [Required(ErrorMessage = "User is required")]
+        public int UserId{ get; set; }
     }
 }

@@ -45,7 +45,9 @@ namespace Postagens.Controllers
             var post = new Post
             {
                 Title = dto.Title,
-                Content = dto.Content
+                Content = dto.Content,
+                UserId = dto.UserId,
+                CreatedAt = DateTime.UtcNow
             };
 
             _context.Posts.Add(post);

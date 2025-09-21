@@ -1,22 +1,9 @@
 import axios from "axios";
+import type { LoginData, LoginResponse, RegisterData } from "../Util/Interfaces";
 
 const API_URL = "https://localhost:7225/api/auth"; // ajuste conforme seu backend
 
-export interface RegisterData {
-    name: string;
-    email: string;
-    password: string;
-}
 
-export interface LoginData {
-    email: string;
-    password: string;
-}
-
-export interface LoginResponse {
-    token: string;
-    message: string;
-}
 
 export const register = async (data: RegisterData) => {
     const res = await axios.post(`${API_URL}/register`, data);
@@ -28,7 +15,7 @@ export const login = async (data: LoginData) => {
 
     // Se a API usar HTTP 200 mesmo em erro, valide o retorno
     if (!res.data.token) {
-        throw new Error(res.data?.message || "Email ou senha inv·lidos");
+        throw new Error(res.data?.message || "Email ou senha inv√°lidos");
     }
 
     return res.data;
