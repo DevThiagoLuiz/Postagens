@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Paper, Typography, TextField, Button, Alert } from "@mui/material";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const Profile = () => {
     const { user, updateUser, token } = useAuth();
@@ -17,10 +18,9 @@ export const Profile = () => {
         return null;        // retorna null enquanto navega
     }
 
-
     const handleSave = async () => {
         if (!name.trim()) {
-            setError("Nome não pode ficar vazio");
+            toast.warn("Nome não pode ficar vazio");
             return;
         }
 
@@ -35,14 +35,13 @@ export const Profile = () => {
             });
 
             updateUser({ name, bio });
-            setSuccess("Perfil atualizado com sucesso!");
-            setError("");
+            toast.success("Perfil atualizado com sucesso! ✨");
         } catch (err) {
             console.error(err);
-            setError("Erro ao atualizar perfil.");
-            setSuccess("");
+            toast.error("Erro ao atualizar perfil. Tente novamente!");
         }
     };
+
 
     return (
         <Box
@@ -81,11 +80,11 @@ export const Profile = () => {
                 />
 
                 <Box display="flex" justifyContent="flex-end" gap={2}>
-                    <Button variant="outlined" color="error" onClick={() => { setName(user.name); setBio(user.bio || ""); }}>
-                        Cancelar
-                    </Button>
                     <Button variant="contained" color="primary" onClick={handleSave}>
                         Salvar
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={() => { setName(user.name); setBio(user.bio || ""); }}>
+                        Cancelar
                     </Button>
                 </Box>
             </Paper>

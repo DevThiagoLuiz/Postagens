@@ -3,7 +3,6 @@ import {
     Box,
     Paper,
     Typography,
-    Grid,
     Divider,
     Alert,
     Button
@@ -11,11 +10,8 @@ import {
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
 import { CreatePostModal } from "./CreatePostModal";
-import type { Post } from "../Util/Interfaces";
 import { EditPostModal } from "./EditPostModal";
-import PersonIcon from "@mui/icons-material/Person";
-
-
+import type { Post } from "../Util/Interfaces";
 
 export const Feed = () => {
     const { token, user } = useAuth();
@@ -26,15 +22,10 @@ export const Feed = () => {
     const [postToEdit, setPostToEdit] = useState<Post | null>(null);
 
     const fetchPosts = async () => {
-        console.log(user);
         try {
             const res = await axios.get<Post[]>(
                 "https://localhost:7225/api/posts",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
             setPosts(res.data.reverse());
         } catch (err) {
@@ -59,12 +50,7 @@ export const Feed = () => {
             py={4}
             px={2}
         >
-
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
+            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
             {posts.length === 0 && !error && (
                 <Typography align="center" color="textSecondary" mt={4}>
@@ -72,48 +58,72 @@ export const Feed = () => {
                 </Typography>
             )}
 
-            {posts.map((post) => (
-                <Paper key={post.id} sx={{ p: 3, mb: 3, borderRadius: 3, boxShadow: 2, maxWidth: 600, width: "100%" }}>
-                    <Grid container justifyContent="space-between" alignItems="center">
-                        <Typography variant="subtitle1" fontWeight={600}>
-                            Titulo: {post.title}
-                        
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                            {new Date(post.createdAt).toLocaleString()}
-                        </Typography>
-                    </Grid>
-
-                    <Typography variant="body2"  sx={{ whiteSpace: "pre-wrap" }}>
-                        Usuário: {post.user?.name?.toUpperCase()}
-                    </Typography>
-                    {post.user?.bio &&
-                    <Typography variant="body2"  sx={{ whiteSpace: "pre-wrap" }}>
-                        Bio: {post.user?.bio}
-                    </Typography>
-                    }
-                    <Divider sx={{ my: 1 }} />
-
-                    <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
-                        {post.content}
-                    </Typography>
-
-                    {post.user?.id === user?.id && ( // só mostra se for autor
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                setPostToEdit(post);
-                                setOpenEditModal(true);
+            {/* Grid responsivo */}
+            <Box
+                display="grid"
+                gridTemplateColumns={{
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "1fr 1fr 1fr"
+                }}
+                gap={2}
+                width="100%"
+            >
+                {posts
+                    .slice()
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .map((post) => (
+                        <Paper
+                            key={post.id}
+                            sx={{
+                                p: 3,
+                                borderRadius: 3,
+                                boxShadow: 2,
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
                             }}
                         >
-                            Editar
-                        </Button>
-                    )}
-                </Paper>
-            ))}
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
+                                <Typography variant="subtitle1" fontWeight={600}>
+                                    Titulo: {post.title}
+                                </Typography>
+                                <Typography variant="caption" color="textSecondary">
+                                    {new Date(post.createdAt).toLocaleString()}
+                                </Typography>
+                            </Box>
+
+                            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+                                Usuário: {post.user?.name?.toUpperCase()}
+                            </Typography>
+                            {post.user?.bio && (
+                                <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+                                    Bio: {post.user?.bio}
+                                </Typography>
+                            )}
+                            <Divider sx={{ my: 1 }} />
+
+                            <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+                                {post.content}
+                            </Typography>
+
+                            {post.user?.id === user?.id && (
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    size="small"
+                                    sx={{ mt: 1 }}
+                                    onClick={() => {
+                                        setPostToEdit(post);
+                                        setOpenEditModal(true);
+                                    }}
+                                >
+                                    Editar
+                                </Button>
+                            )}
+                        </Paper>
+                    ))}
+            </Box>
 
             {postToEdit && user && token && (
                 <EditPostModal
@@ -144,8 +154,6 @@ export const Feed = () => {
                     onPostCreated={fetchPosts}
                 />
             )}
-
-
         </Box>
     );
 };

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
+import { toast } from "react-toastify";
 
 interface User {
     id: string;
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("user", JSON.stringify(user));
         setToken(newToken);
         setUser(user);
+        toast.success(`Bem-vindo, ${user.name}!`);
     };
 
     const logout = () => {
@@ -45,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("user");
         setToken(null);
         setUser(null);
+        toast.info("Logout realizado com sucesso.");
     };
 
     const updateUser = (updated: Partial<User>) => {

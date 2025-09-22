@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { Box, Modal, Typography, TextField, Button, Alert } from "@mui/material";
 import axios from "axios";
-import type { Post, PropsPostModal } from "../Util/Interfaces";
+import type { Post, PropsPostModal, PropsEditPostModal } from "../Util/Interfaces";
+import { toast } from "react-toastify";
 
-interface PropsEditPostModal extends PropsPostModal {
-    post: Post; // post que vamos editar
-}
+
 
 export const EditPostModal = ({ open, onClose, token, user, post, onPostCreated }: PropsEditPostModal) => {
     const [title, setTitle] = useState(post.title);
@@ -20,7 +19,10 @@ export const EditPostModal = ({ open, onClose, token, user, post, onPostCreated 
     }, [post]);
 
     const handleEditPost = async () => {
-        if (!title.trim() || !content.trim()) return;
+        if (!title.trim() || !content.trim()) {
+            toast.warn("Preencha todos os campos antes de salvar!");
+            return;
+        }
 
         try {
             await axios.put(
@@ -28,15 +30,16 @@ export const EditPostModal = ({ open, onClose, token, user, post, onPostCreated 
                 { title, content, userId: user?.id },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setError("");
+
             onClose();
             onPostCreated(); // atualiza lista no Feed
+
+            toast.success("Post atualizado com sucesso! ✨");
         } catch (err) {
             console.error(err);
-            setError("Erro ao atualizar postagem.");
+            toast.error("Erro ao atualizar postagem. Tente novamente!");
         }
     };
-
     return (
         <Modal open={open} onClose={onClose}>
             <Box

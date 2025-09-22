@@ -8,6 +8,9 @@ export interface Post {
     createdAt: string;
 }
 
+export interface PropsEditPostModal extends PropsPostModal {
+    post: Post; // post que vamos editar
+}
 
 export interface User {
     id: string;
@@ -24,7 +27,7 @@ export interface LoginResponse {
 export interface AuthContextType {
     token: string | null;
     user: User | null;
-    login: (email: string, password: string) => Promise<void>; // <- atualizado
+    login: (email: string, password: string) => Promise<void>; 
     logout: () => void;
     updateUser: (updated: Partial<User>) => void;
 }
@@ -51,6 +54,6 @@ export interface PropsPostModal {
     onClose: () => void;
     token: string;
     user: User;
-    onPostCreated: () => void; // callback para atualizar lista de posts
+    onPostCreated: () => void;
 }
 

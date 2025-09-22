@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Modal, Typography, TextField, Button, Alert } from "@mui/material";
 import axios from "axios";
 import type { PropsPostModal } from "../Util/Interfaces";
+import { toast } from "react-toastify";
 
 export const CreatePostModal = ({ open, onClose, token, user, onPostCreated }: PropsPostModal) => {
     const [title, setTitle] = useState("");
@@ -9,7 +10,10 @@ export const CreatePostModal = ({ open, onClose, token, user, onPostCreated }: P
     const [error, setError] = useState("");
 
     const handleCreatePost = async () => {
-        if (!title.trim() || !content.trim()) return;
+        if (!title.trim() || !content.trim()) {
+            toast.warn("Preencha todos os campos antes de postar!");
+            return;
+        }
 
         try {
             await axios.post(
@@ -17,14 +21,16 @@ export const CreatePostModal = ({ open, onClose, token, user, onPostCreated }: P
                 { title, content, userId: user?.id },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+
             setTitle("");
             setContent("");
-            setError("");
             onClose();
             onPostCreated(); // atualiza lista no Feed
+
+            toast.success("Post criado com sucesso! 🎉");
         } catch (err) {
             console.error(err);
-            setError("Erro ao criar postagem.");
+            toast.error("Erro ao criar postagem. Tente novamente!");
         }
     };
 

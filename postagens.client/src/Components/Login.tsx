@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { login as loginApi } from "../Api/Auth";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Login = () => {
     const [email, setEmail] = useState("");
@@ -13,19 +14,24 @@ export const Login = () => {
     const navigate = useNavigate();
 
     const signIn = async () => {
-        setError("");
         try {
             const data = await loginApi({ email, password });
-            if (!data.token) throw new Error("Login falhou");
+            if (!data.token) {
+                toast.error("Login falhou");
+                return;
+            }
+
             login(data.token, data.user);
+            toast.success("Login realizado com sucesso! 🎉");
             navigate("/posts");
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
-                setError(err.response?.data || "Erro ao fazer login");
+                toast.error(err.response?.data?.message);
+                setError(err.response?.data?.message);
             } else if (err instanceof Error) {
-                setError(err.message);
+                toast.error(err.message);
             } else {
-                setError("Erro desconhecido");
+                toast.error("Erro desconhecido");
             }
         }
     };
@@ -42,7 +48,7 @@ export const Login = () => {
         >
             <Paper elevation={6} sx={{ p: 4, borderRadius: 2, width: "100%", maxWidth: 400 }}>
                 <Typography variant="h5" align="center" gutterBottom>
-                    Sistema de cadastro
+                    Sistema de posts
                 </Typography>
 
                 <hr style={{ margin: "16px 0" }} />

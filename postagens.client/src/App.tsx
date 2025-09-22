@@ -6,6 +6,9 @@ import { NavMenu } from "./Components/NavMenu";
 import { AuthProvider, useAuth } from "./Context/AuthContext";
 import type { JSX } from "react";
 import { Profile } from "./Components/Profile";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 
 // Rota privada
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -20,40 +23,42 @@ const PrivateLayout = ({ children }: { children: JSX.Element }) => (
         {children}
     </>
 );
-
 function App() {
     return (
-        <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+        <>
+            <ToastContainer />
+            <AuthProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
-                    <Route
-                        path="/posts"
-                        element={
-                            <PrivateRoute>
-                                <PrivateLayout>
-                                    <Feed />
-                                </PrivateLayout>
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path="/profile"
-                        element={
-                            <PrivateRoute>
-                                <PrivateLayout>
-                                    <Profile />
-                                </PrivateLayout>
-                            </PrivateRoute>
-                        }
-                    />
+                        <Route
+                            path="/posts"
+                            element={
+                                <PrivateRoute>
+                                    <PrivateLayout>
+                                        <Feed />
+                                    </PrivateLayout>
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <PrivateRoute>
+                                    <PrivateLayout>
+                                        <Profile />
+                                    </PrivateLayout>
+                                </PrivateRoute>
+                            }
+                        />
 
-                    <Route path="*" element={<Navigate to="/login" />} />
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
+                        <Route path="*" element={<Navigate to="/login" />} />
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
+        </>
     );
 }
 

@@ -1,8 +1,9 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { TextField, Button, Typography, Paper, Alert, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { register as registerApi } from "../Api/Auth";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Register = () => {
     const [name, setName] = useState("");
@@ -12,20 +13,22 @@ export const Register = () => {
     const [success, setSuccess] = useState("");
     const navigate = useNavigate();
 
+
+
     const handleRegister = async () => {
-        setError("");
-        setSuccess("");
         try {
             await registerApi({ name, email, password });
-            setSuccess("Cadastro realizado com sucesso!");
+            toast.success("Cadastro realizado com sucesso! 🎉");
+
+            // redireciona pro login após um pequeno delay
             setTimeout(() => navigate("/login"), 1500);
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
-                setError(err.response?.data || "Erro ao cadastrar");
+                toast.error(err.response?.data?.message || "Erro ao cadastrar");
             } else if (err instanceof Error) {
-                setError(err.message);
+                toast.error(err.message);
             } else {
-                setError("Erro desconhecido");
+                toast.error("Erro desconhecido");
             }
         }
     };
