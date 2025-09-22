@@ -13,6 +13,7 @@ import { useAuth } from "../Context/AuthContext";
 import { CreatePostModal } from "./CreatePostModal";
 import type { Post } from "../Util/Interfaces";
 import { EditPostModal } from "./EditPostModal";
+import PersonIcon from "@mui/icons-material/Person";
 
 
 
@@ -73,6 +74,7 @@ export const Feed = () => {
                 <Paper key={post.id} sx={{ p: 3, mb: 3, borderRadius: 3, boxShadow: 2, maxWidth: 600, width: "100%" }}>
                     <Grid container justifyContent="space-between" alignItems="center">
                         <Typography variant="subtitle1" fontWeight={600}>
+                            <PersonIcon fontSize="small" sx={{ mr: 1 }} />
                             {post.user?.name?.toUpperCase()} - {post.title}
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
