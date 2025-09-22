@@ -23,21 +23,21 @@ O sistema utiliza HTTPS para comunicação segura entre frontend e backend.
 
 ## Instalação
 
-### 1. Clonar o repositório
+### Clonar o repositório
 git clone <URL_DO_REPOSITORIO>
 cd postagens
-2. Instalar dependências do frontend
+Instalar dependências do frontend
 bash
 Copiar código
 cd Postagens.Client
 npm install
-3. Criar o banco de dados
+Criar o banco de dados
 No PostgreSQL, execute:
 
 sql
 Copiar código
 CREATE DATABASE postagens;
-4. Configurar variáveis de ambiente (Rota da API)
+Configurar variáveis de ambiente (Rota da API)
 No frontend (Postagens.Client/.env):
 
 .env
@@ -51,7 +51,7 @@ Copiar código
     "DefaultConnection": "Host=localhost;Port=5432;Database=postagens;Username=seu_usuario;Password=sua_senha"
   }
 }
-5. Rodar as migrations do backend
+Rodar as migrations do backend
 No terminal, dentro da pasta Postagens.Server:
 
 bash
