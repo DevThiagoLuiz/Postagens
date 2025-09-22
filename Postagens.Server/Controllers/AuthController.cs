@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Postagens.Data;
 using Postagens.DTOs;
 using Postagens.Models;
 using Postagens.Server.Services;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -62,6 +64,20 @@ public class AuthController : ControllerBase
             token,
             user = new { user.Id, user.Name, user.Email, user.Bio }
         });
+    }
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return NotFound();
+
+        user.Name = dto.Name;
+        user.Bio = dto.Bio;
+
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 
 }

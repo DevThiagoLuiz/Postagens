@@ -52,12 +52,14 @@ export const Feed = () => {
             display="flex"
             flexDirection="column"
             alignItems="center"
-            minHeight="100vh"
-            minWidth="100vw"
+            height="100vh"
+            width="100vw"
+            sx={{ boxSizing: "border-box" }}
             bgcolor="#f5f5f5"
             py={4}
             px={2}
         >
+
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
@@ -74,14 +76,22 @@ export const Feed = () => {
                 <Paper key={post.id} sx={{ p: 3, mb: 3, borderRadius: 3, boxShadow: 2, maxWidth: 600, width: "100%" }}>
                     <Grid container justifyContent="space-between" alignItems="center">
                         <Typography variant="subtitle1" fontWeight={600}>
-                            <PersonIcon fontSize="small" sx={{ mr: 1 }} />
-                            {post.user?.name?.toUpperCase()} - {post.title}
+                            Titulo: {post.title}
+                        
                         </Typography>
                         <Typography variant="caption" color="textSecondary">
                             {new Date(post.createdAt).toLocaleString()}
                         </Typography>
                     </Grid>
 
+                    <Typography variant="body2"  sx={{ whiteSpace: "pre-wrap" }}>
+                        Usuário: {post.user?.name?.toUpperCase()}
+                    </Typography>
+                    {post.user?.bio &&
+                    <Typography variant="body2"  sx={{ whiteSpace: "pre-wrap" }}>
+                        Bio: {post.user?.bio}
+                    </Typography>
+                    }
                     <Divider sx={{ my: 1 }} />
 
                     <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>

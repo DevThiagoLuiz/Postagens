@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface User {
@@ -11,7 +11,7 @@ interface User {
 interface AuthContextType {
     token: string | null;
     user: User | null;
-    login: (token: string, user: User) => Promise<void>;
+    login: (token: string, user: User) => void;
     logout: () => void;
     updateUser: (user: Partial<User>) => void;
 }
@@ -20,10 +20,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const saved = localStorage.getItem("user");
+        return saved ? JSON.parse(saved) : null;
+    });
 
+    // Sincroniza o state com localStorage caso o usuário já esteja logado
+    useEffect(() => {
+        if (token && !user) {
+            const saved = localStorage.getItem("user");
+            if (saved) setUser(JSON.parse(saved));
+        }
+    }, [token, user]);
 
-    const login = async (newToken: string, user: User) => {
+    const login = (newToken: string, user: User) => {
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(user));
         setToken(newToken);
@@ -38,7 +48,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const updateUser = (updated: Partial<User>) => {
-        setUser((prev) => (prev ? { ...prev, ...updated } : null));
+        setUser((prev) => {
+            if (!prev) return null;
+            const newUser = { ...prev, ...updated };
+            localStorage.setItem("user", JSON.stringify(newUser)); // mantém persistência
+            return newUser;
+        });
     };
 
     return (
