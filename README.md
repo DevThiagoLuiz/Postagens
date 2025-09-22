@@ -24,60 +24,60 @@ O sistema utiliza HTTPS para comunicação segura entre frontend e backend.
 ## Instalação
 
 ### Clonar o repositório
-git clone <URL_DO_REPOSITORIO>
-cd postagens
-Instalar dependências do frontend
-bash
-Copiar código
-cd Postagens.Client
-npm install
-Criar o banco de dados
-No PostgreSQL, execute:
+- git clone <URL_DO_REPOSITORIO>
+- cd postagens
+- Instalar dependências do frontend
+- bash
+- Copiar código
+- cd Postagens.Client
+- npm install
+- Criar o banco de dados
+- No PostgreSQL, execute:
 
 sql
 Copiar código
-CREATE DATABASE postagens;
-Configurar variáveis de ambiente (Rota da API)
-No frontend (Postagens.Client/.env):
+- CREATE DATABASE postagens;
+- Configurar variáveis de ambiente (Rota da API)
+- No frontend (Postagens.Client/.env):
 
 .env
-VITE_BACKEND_API_URL=https://localhost:7225/api (Rota default para api, caso você inicie em outra porta gentileza alterar)
-No backend (Postagens.Server/appsettings.json:
+- VITE_BACKEND_API_URL=https://localhost:7225/api (Rota default para api, caso você inicie em outra porta gentileza alterar)
+- No backend (Postagens.Server/appsettings.json:
 
 json
-Copiar código
+- Copiar código
 {
   "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5432;Database=postagens;Username=seu_usuario;Password=sua_senha"
   }
 }
-Rodar as migrations do backend
-No terminal, dentro da pasta Postagens.Server:
+- Rodar as migrations do backend
+- No terminal, dentro da pasta Postagens.Server:
 
 bash
-Copiar código
+- Copiar código
 # restaurar pacotes
-dotnet restore
+- dotnet restore
 
 # criar a migration (apenas se houver alterações novas)
 dotnet ef migrations add InitialCreate
 
 # aplicar as migrations ao banco
-dotnet ef database update
-Executando o projeto
-Backend
-bash
-Copiar código
-cd Postagens.Server
-dotnet run
-O backend estará disponível em: https://localhost:7225
+- dotnet ef database update
+- Executando o projeto
+- Backend
+- bash
+- Copiar código
+- cd Postagens.Server
+- dotnet run
+- O backend estará disponível em: https://localhost:7225
 
 Frontend
-bash
-Copiar código
-cd Postagens.Client
-npm run dev
-O frontend estará disponível em: http://localhost:57762 (ou porta indicada no terminal)
+- bash
+- Copiar código
+- cd Postagens.Client
+- npm run dev
+- O frontend estará disponível em: http://localhost:57762 (ou porta indicada no terminal)
 
 Testes
 Backend
@@ -90,11 +90,11 @@ Frontend
 
 
 Scripts úteis (frontend)
-bash
-Copiar código
-npm run dev      # inicia o frontend
-Copiar código
-Postagens/
-├─ Postagens.Client/   # Frontend React + Vite + MUI
-├─ Postagens.Server/   # Backend .NET 6
-└─ README.md
+- bash
+- Copiar código
+- npm run dev      # inicia o frontend
+- Copiar código
+- Postagens/
+- ├─ Postagens.Client/   # Frontend React + Vite + MUI
+- ├─ Postagens.Server/   # Backend .NET 6
+- └─ README.md
