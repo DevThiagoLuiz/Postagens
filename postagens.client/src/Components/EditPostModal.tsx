@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Box, Modal, Typography, TextField, Button, Alert } from "@mui/material";
 import axios from "axios";
-import type { Post, PropsPostModal, PropsEditPostModal } from "../Util/Interfaces";
+import type { PropsEditPostModal } from "../Util/Interfaces";
 import { toast } from "react-toastify";
+import { API_URL } from "../Util/LinkApi";
 
 
 
@@ -26,7 +27,7 @@ export const EditPostModal = ({ open, onClose, token, user, post, onPostCreated 
 
         try {
             await axios.put(
-                `https://localhost:7225/api/posts/${post.id}`,
+                `${API_URL}/posts/${post.id}`,
                 { title, content, userId: user?.id },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -37,6 +38,7 @@ export const EditPostModal = ({ open, onClose, token, user, post, onPostCreated 
             toast.success("Post atualizado com sucesso! ✨");
         } catch (err) {
             console.error(err);
+            setError("Erro ao atualizar postagem.");
             toast.error("Erro ao atualizar postagem. Tente novamente!");
         }
     };

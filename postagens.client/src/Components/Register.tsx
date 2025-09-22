@@ -20,6 +20,7 @@ export const Register = () => {
             await registerApi({ name, email, password });
             toast.success("Cadastro realizado com sucesso! 🎉");
 
+            setSuccess("Cadastro realizado com sucesso! Você será redirecionado para o login.");
             // redireciona pro login após um pequeno delay
             setTimeout(() => navigate("/login"), 1500);
         } catch (err: unknown) {
@@ -27,6 +28,7 @@ export const Register = () => {
                 toast.error(err.response?.data?.message || "Erro ao cadastrar");
             } else if (err instanceof Error) {
                 toast.error(err.message);
+                setError(err.message);
             } else {
                 toast.error("Erro desconhecido");
             }

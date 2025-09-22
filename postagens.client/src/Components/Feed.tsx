@@ -12,6 +12,7 @@ import { useAuth } from "../Context/AuthContext";
 import { CreatePostModal } from "./CreatePostModal";
 import { EditPostModal } from "./EditPostModal";
 import type { Post } from "../Util/Interfaces";
+import { API_URL } from "../Util/LinkApi";
 
 export const Feed = () => {
     const { token, user } = useAuth();
@@ -24,7 +25,7 @@ export const Feed = () => {
     const fetchPosts = async () => {
         try {
             const res = await axios.get<Post[]>(
-                "https://localhost:7225/api/posts",
+                `${API_URL}/posts`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setPosts(res.data.reverse());

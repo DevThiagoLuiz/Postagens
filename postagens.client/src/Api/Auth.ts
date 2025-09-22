@@ -1,14 +1,12 @@
 import axios from "axios";
 import type { LoginData, LoginResponse, RegisterData } from "../Util/Interfaces";
 import { toast } from "react-toastify";
-
-const API_URL = "https://localhost:7225/api/auth"; // ajuste conforme seu backend
-
+import { API_URL } from "../Util/LinkApi";
 
 
 export const register = async (data: RegisterData) => {
     try {
-        const res = await axios.post(`${API_URL}/register`, data);
+        const res = await axios.post(`${API_URL}/auth/register`, data);
         return res.data;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -19,7 +17,7 @@ export const register = async (data: RegisterData) => {
 
 export const login = async (data: LoginData) => {
     try {
-        const res = await axios.post<LoginResponse>(`${API_URL}/login`, data);
+        const res = await axios.post<LoginResponse>(`${API_URL}/auth/login`, data);
 
         if (!res.data.token) {
             toast.error(res.data?.message || "Email ou senha inválidos");

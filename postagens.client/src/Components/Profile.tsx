@@ -3,6 +3,7 @@ import { Box, Paper, Typography, TextField, Button, Alert } from "@mui/material"
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { API_URL } from "../Util/LinkApi";
 
 export const Profile = () => {
     const { user, updateUser, token } = useAuth();
@@ -25,7 +26,7 @@ export const Profile = () => {
         }
 
         try {
-            await fetch("https://localhost:7225/api/auth/profile", {
+            await fetch(`${API_URL}/auth/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,9 +36,11 @@ export const Profile = () => {
             });
 
             updateUser({ name, bio });
+            setSuccess("Perfil atualizado com sucesso!");
             toast.success("Perfil atualizado com sucesso! ✨");
         } catch (err) {
             console.error(err);
+            setError("Erro ao atualizar perfil.");
             toast.error("Erro ao atualizar perfil. Tente novamente!");
         }
     };

@@ -26,10 +26,10 @@ export const CreatePostModal = ({ open, onClose, token, user, onPostCreated }: P
             setContent("");
             onClose();
             onPostCreated(); // atualiza lista no Feed
-
             toast.success("Post criado com sucesso! 🎉");
         } catch (err) {
             console.error(err);
+            setError("Erro ao criar postagem.");
             toast.error("Erro ao criar postagem. Tente novamente!");
         }
     };
